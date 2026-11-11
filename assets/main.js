@@ -28,7 +28,7 @@ function setLang(l){
   document.querySelectorAll("[data-i18n]").forEach(el => { const v = t(el.dataset.i18n); if (v !== undefined) el.innerHTML = v; });
   document.querySelectorAll(".lang button").forEach(b => b.classList.toggle("on", b.dataset.lang === LANG));
   store.set("lang", LANG);
-  buildSliders(); buildSocial();
+  buildSliders(); buildSocial(); drawR2();
 }
 document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
 
@@ -189,6 +189,60 @@ function buildSocial(){
 /* ---------- TCAMS video: no autoplay for reduced motion ---------- */
 const vid = document.getElementById("tcamsVideo");
 if (vid && reduceMotion) { vid.removeAttribute("autoplay"); vid.pause(); vid.controls = true; }
+
+/* ---------- LEP chart: test R² by model (data: LiDAR_QC_LEP_v2 docs/model_family_comparison.csv) ---------- */
+const R2 = {"abiotic": {"BOJ": {"rf": 0.18, "mlp": 0.2, "tabpfn": 0.18}, "BOP": {"rf": 0.15, "mlp": 0.13, "tabpfn": 0.15}, "EPB": {"rf": 0.18, "mlp": 0.19, "tabpfn": 0.24}, "EPN": {"rf": 0.36, "mlp": 0.33, "tabpfn": 0.38}, "ERR": {"rf": 0.21, "mlp": 0.21, "tabpfn": 0.23}, "ERS": {"rf": 0.09, "mlp": 0.11, "tabpfn": 0.05}, "SAB": {"rf": 0.18, "mlp": 0.18, "tabpfn": 0.19}},
+  "abiotic_lidar_ntems": {"BOJ": {"rf": 0.33, "mlp": 0.33, "tabpfn": 0.4}, "BOP": {"rf": 0.22, "mlp": 0.23, "tabpfn": 0.29}, "EPB": {"rf": 0.2, "mlp": 0.17, "tabpfn": 0.26}, "EPN": {"rf": 0.49, "mlp": 0.5, "tabpfn": 0.63}, "ERR": {"rf": 0.27, "mlp": 0.26, "tabpfn": 0.35}, "ERS": {"rf": 0.42, "mlp": 0.4, "tabpfn": 0.5}, "SAB": {"rf": 0.34, "mlp": 0.35, "tabpfn": 0.45}}};
+const SP_ORDER = ["EPN","ERS","SAB","BOJ","ERR","BOP","EPB"];
+let SCEN = "abiotic_lidar_ntems";
+function drawR2(){
+  const svg = document.getElementById("r2svg"); if (!svg) return;
+  const cw = svg.parentElement.clientWidth || 680, W = Math.max(300, Math.min(760, cw)), L = W < 480 ? 104 : 128, R = 14;
+  const names = t("js_species"), top = 8, rowH = 34, H = top + SP_ORDER.length*rowH + 28, xmax = 0.7;
+  const x = v => L + (W - L - R) * v / xmax;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  let s = '<g class="axis">';
+  for (let k = 0; k <= 7; k++){ const v = k/10; s += `<line class="gridl" x1="${x(v)}" x2="${x(v)}" y1="${top}" y2="${H-24}"/><text x="${x(v)}" y="${H-8}" text-anchor="middle">${v.toFixed(1)}</text>`; }
+  s += `<text x="${L-30}" y="${H-8}" text-anchor="end">R²</text></g>`;
+  SP_ORDER.forEach((sp,i) => {
+    const y = top + i*rowH + rowH/2;
+    s += `<g class="row" data-sp="${sp}"><rect class="hit" x="0" y="${y-rowH/2}" width="${W}" height="${rowH}" rx="6"/>
+      <text x="${L-12}" y="${y+4}" text-anchor="end">${names[sp]}</text>
+      <line class="span" y1="${y}" y2="${y}"/>
+      <g class="mk" data-m="rf"><rect x="-5" y="-5" width="10" height="10" class="m-rf"/></g>
+      <g class="mk" data-m="mlp"><path d="M0 -6 6 5H-6Z" class="m-mlp"/></g>
+      <g class="mk" data-m="tabpfn"><circle r="6.5" class="m-tab"/></g></g>`;
+  });
+  svg.innerHTML = s;
+  svg._x = x; svg._top = top; svg._rowH = rowH;
+  placeR2();
+  const tip = document.getElementById("r2tip");
+  svg.querySelectorAll(".row").forEach(row => {
+    row.addEventListener("mousemove", e => {
+      const v = R2[SCEN][row.dataset.sp], box = svg.parentElement.getBoundingClientRect();
+      tip.innerHTML = `<b>${names[row.dataset.sp]}</b><div><span>TabPFN</span><span>${v.tabpfn.toFixed(2)}</span></div><div><span>Random Forest</span><span>${v.rf.toFixed(2)}</span></div><div><span>MLP</span><span>${v.mlp.toFixed(2)}</span></div>`;
+      tip.hidden = false;
+      const px = Math.min(e.clientX - box.left + 14, box.width - 190);
+      tip.style.left = px + "px"; tip.style.top = (e.clientY - box.top + 12) + "px";
+    });
+    row.addEventListener("mouseleave", () => { tip.hidden = true; });
+  });
+}
+function placeR2(){
+  const svg = document.getElementById("r2svg"); if (!svg || !svg._x) return;
+  const x = svg._x;
+  svg.querySelectorAll(".row").forEach((row,i) => {
+    const v = R2[SCEN][row.dataset.sp], y = svg._top + i*svg._rowH + svg._rowH/2;
+    row.querySelectorAll(".mk").forEach(m => { m.style.transform = `translate(${x(v[m.dataset.m])}px, ${y}px)`; });
+    const vals = [v.rf, v.mlp, v.tabpfn], ln = row.querySelector(".span");
+    ln.setAttribute("x1", x(Math.min(...vals))); ln.setAttribute("x2", x(Math.max(...vals)));
+  });
+  const m = k => (Object.values(R2[SCEN]).reduce((a,o) => a + o[k], 0) / 7).toFixed(2);
+  document.getElementById("r2note").textContent = t(SCEN === "abiotic" ? "js_r2_abio" : "js_r2_full").replace("{t}", m("tabpfn")).replace("{r}", m("rf")).replace("{m}", m("mlp"));
+  document.querySelectorAll(".seg button").forEach(b => b.classList.toggle("on", b.dataset.scen === SCEN));
+}
+document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => { SCEN = b.dataset.scen; placeR2(); }));
+let r2t; window.addEventListener("resize", () => { clearTimeout(r2t); r2t = setTimeout(drawR2, 200); });
 
 /* ---------- start ---------- */
 const nav = (navigator.language || "en").slice(0,2);

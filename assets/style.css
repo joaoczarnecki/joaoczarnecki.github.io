@@ -151,3 +151,33 @@ dialog#lightbox button{position:fixed;top:14px;right:18px;font-size:2rem;color:#
   .sl{grid-template-columns:110px 1fr 40px}
   .meter{grid-template-columns:110px 1fr 44px}
 }
+
+/* LEP chart */
+:root{--s-tab:#eb6834;--s-rf:#2a78d6;--s-mlp:#1baf7a;--grid:#e3e6df}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--s-tab:#d95926;--s-rf:#3987e5;--s-mlp:#199e70;--grid:#26352b}}
+:root[data-theme="dark"]{--s-tab:#d95926;--s-rf:#3987e5;--s-mlp:#199e70;--grid:#26352b}
+.chart-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);margin:-20px 0 40px}
+.chart-head{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center}
+.chart-head h4{margin:0;font-size:1.15rem;max-width:46ch}
+.seg{display:flex;border:1px solid var(--line);border-radius:99px;overflow:hidden}
+.seg button{background:none;border:0;padding:7px 12px;font:600 .8rem Inter,sans-serif;color:var(--ink2);cursor:pointer}
+.seg button.on{background:var(--green);color:var(--bg)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin:14px 0 4px;font-size:.85rem;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.m-tab{fill:var(--s-tab);stroke:var(--surface);stroke-width:2}
+.m-rf{fill:var(--s-rf);stroke:var(--surface);stroke-width:2}
+.m-mlp{fill:var(--s-mlp);stroke:var(--surface);stroke-width:2}
+.chart-wrap{position:relative}
+#r2svg{width:100%;height:auto;display:block;overflow:visible}
+#r2svg text{fill:var(--ink2);font:12px Inter,sans-serif}
+#r2svg .axis text{fill:var(--muted);font-size:11px}
+#r2svg .gridl{stroke:var(--grid);stroke-width:1}
+#r2svg .span{stroke:var(--line);stroke-width:2;stroke-linecap:round}
+#r2svg .mk{transition:transform .6s cubic-bezier(.3,.7,.2,1)}
+#r2svg .row:hover .hit{fill:var(--band)}
+#r2svg .hit{fill:transparent}
+.tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:10px;padding:8px 12px;font-size:.82rem;color:var(--ink);min-width:170px}
+.tip b{display:block;margin-bottom:4px}
+.tip div{display:flex;justify-content:space-between;gap:12px;color:var(--ink2)}
+.tip div span:last-child{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
+@media (max-width:860px){.chart-card{padding:16px;margin-top:-10px}}
