@@ -190,20 +190,19 @@ function buildSocial(){
 const vid = document.getElementById("tcamsVideo");
 if (vid && reduceMotion) { vid.removeAttribute("autoplay"); vid.pause(); vid.controls = true; }
 
-/* ---------- LEP chart: test R² by model (data: LiDAR_QC_LEP_v2 docs/model_family_comparison.csv) ---------- */
-const R2 = {"abiotic": {"BOJ": {"rf": 0.18, "mlp": 0.2, "tabpfn": 0.18}, "BOP": {"rf": 0.15, "mlp": 0.13, "tabpfn": 0.15}, "EPB": {"rf": 0.18, "mlp": 0.19, "tabpfn": 0.24}, "EPN": {"rf": 0.36, "mlp": 0.33, "tabpfn": 0.38}, "ERR": {"rf": 0.21, "mlp": 0.21, "tabpfn": 0.23}, "ERS": {"rf": 0.09, "mlp": 0.11, "tabpfn": 0.05}, "SAB": {"rf": 0.18, "mlp": 0.18, "tabpfn": 0.19}},
-  "abiotic_lidar_ntems": {"BOJ": {"rf": 0.33, "mlp": 0.33, "tabpfn": 0.4}, "BOP": {"rf": 0.22, "mlp": 0.23, "tabpfn": 0.29}, "EPB": {"rf": 0.2, "mlp": 0.17, "tabpfn": 0.26}, "EPN": {"rf": 0.49, "mlp": 0.5, "tabpfn": 0.63}, "ERR": {"rf": 0.27, "mlp": 0.26, "tabpfn": 0.35}, "ERS": {"rf": 0.42, "mlp": 0.4, "tabpfn": 0.5}, "SAB": {"rf": 0.34, "mlp": 0.35, "tabpfn": 0.45}}};
+/* ---------- LEP chart: relative predictive skill by model (preliminary; rescaled from LiDAR_QC_LEP_v2 results) ---------- */
+const R2 = {"abiotic": {"BOJ": {"rf": 29, "mlp": 32, "tabpfn": 29}, "BOP": {"rf": 24, "mlp": 21, "tabpfn": 24}, "EPB": {"rf": 29, "mlp": 30, "tabpfn": 38}, "EPN": {"rf": 57, "mlp": 52, "tabpfn": 60}, "ERR": {"rf": 33, "mlp": 33, "tabpfn": 37}, "ERS": {"rf": 14, "mlp": 17, "tabpfn": 8}, "SAB": {"rf": 29, "mlp": 29, "tabpfn": 30}}, "abiotic_lidar_ntems": {"BOJ": {"rf": 52, "mlp": 52, "tabpfn": 63}, "BOP": {"rf": 35, "mlp": 37, "tabpfn": 46}, "EPB": {"rf": 32, "mlp": 27, "tabpfn": 41}, "EPN": {"rf": 78, "mlp": 79, "tabpfn": 100}, "ERR": {"rf": 43, "mlp": 41, "tabpfn": 56}, "ERS": {"rf": 67, "mlp": 63, "tabpfn": 79}, "SAB": {"rf": 54, "mlp": 56, "tabpfn": 71}}};  // relative skill (best = 100); no raw values published
 const SP_ORDER = ["EPN","ERS","SAB","BOJ","ERR","BOP","EPB"];
 let SCEN = "abiotic_lidar_ntems";
 function drawR2(){
   const svg = document.getElementById("r2svg"); if (!svg) return;
   const cw = svg.parentElement.clientWidth || 680, W = Math.max(300, Math.min(760, cw)), L = W < 480 ? 104 : 128, R = 14;
-  const names = t("js_species"), top = 8, rowH = 34, H = top + SP_ORDER.length*rowH + 28, xmax = 0.7;
+  const names = t("js_species"), top = 8, rowH = 34, H = top + SP_ORDER.length*rowH + 28, xmax = 112;
   const x = v => L + (W - L - R) * v / xmax;
   svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
   let s = '<g class="axis">';
-  for (let k = 0; k <= 7; k++){ const v = k/10; s += `<line class="gridl" x1="${x(v)}" x2="${x(v)}" y1="${top}" y2="${H-24}"/><text x="${x(v)}" y="${H-8}" text-anchor="middle">${v.toFixed(1)}</text>`; }
-  s += `<text x="${L-30}" y="${H-8}" text-anchor="end">R²</text></g>`;
+  for (let k = 0; k <= 7; k++){ const v = k*xmax/7; s += `<line class="gridl" x1="${x(v)}" x2="${x(v)}" y1="${top}" y2="${H-24}"/>`; }
+  s += `<text x="${(L + W - R)/2}" y="${H-8}" text-anchor="middle">${t("js_axis")}</text></g>`;
   SP_ORDER.forEach((sp,i) => {
     const y = top + i*rowH + rowH/2;
     s += `<g class="row" data-sp="${sp}"><rect class="hit" x="0" y="${y-rowH/2}" width="${W}" height="${rowH}" rx="6"/>
@@ -220,7 +219,9 @@ function drawR2(){
   svg.querySelectorAll(".row").forEach(row => {
     row.addEventListener("mousemove", e => {
       const v = R2[SCEN][row.dataset.sp], box = svg.parentElement.getBoundingClientRect();
-      tip.innerHTML = `<b>${names[row.dataset.sp]}</b><div><span>TabPFN</span><span>${v.tabpfn.toFixed(2)}</span></div><div><span>Random Forest</span><span>${v.rf.toFixed(2)}</span></div><div><span>MLP</span><span>${v.mlp.toFixed(2)}</span></div>`;
+      const lab = { tabpfn: "TabPFN", rf: "Random Forest", mlp: "MLP" };
+      const order = Object.keys(lab).sort((a,b) => v[b] - v[a]);
+      tip.innerHTML = `<b>${names[row.dataset.sp]}</b>` + order.map((k,i) => `<div><span>${i+1}. ${lab[k]}</span><span></span></div>`).join("");
       tip.hidden = false;
       const px = Math.min(e.clientX - box.left + 14, box.width - 190);
       tip.style.left = px + "px"; tip.style.top = (e.clientY - box.top + 12) + "px";
@@ -237,8 +238,7 @@ function placeR2(){
     const vals = [v.rf, v.mlp, v.tabpfn], ln = row.querySelector(".span");
     ln.setAttribute("x1", x(Math.min(...vals))); ln.setAttribute("x2", x(Math.max(...vals)));
   });
-  const m = k => (Object.values(R2[SCEN]).reduce((a,o) => a + o[k], 0) / 7).toFixed(2);
-  document.getElementById("r2note").textContent = t(SCEN === "abiotic" ? "js_r2_abio" : "js_r2_full").replace("{t}", m("tabpfn")).replace("{r}", m("rf")).replace("{m}", m("mlp"));
+  document.getElementById("r2note").textContent = t(SCEN === "abiotic" ? "js_r2_abio" : "js_r2_full");
   document.querySelectorAll(".seg button").forEach(b => b.classList.toggle("on", b.dataset.scen === SCEN));
 }
 document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => { SCEN = b.dataset.scen; placeR2(); }));

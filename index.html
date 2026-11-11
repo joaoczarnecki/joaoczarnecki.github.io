@@ -81,7 +81,7 @@
     <div class="txt">
       <p class="tag"><span class="status wait" data-i18n="st_review">Under review · CJFR</span> <span data-i18n="p2_field">Biotic interactions</span></p>
       <h3 data-i18n="p2_title">Do a tree's neighbours tell us where it will do well?</h3>
-      <p class="insight" data-i18n="p2_insight">Yes: adding the species a tree grows with raised the test R² from <strong>0.01–0.44 to 0.07–0.73</strong> across seven species.</p>
+      <p class="insight" data-i18n="p2_insight">Yes: adding the species a tree grows with <strong>improved predictions on independent test data</strong> for all seven species.</p>
       <p data-i18n="p2_text">Climate, soil and terrain miss part of the story. Co-occurring species, read straight from the forest inventory, act as a proxy for competition and habitat filtering, reduce bias and often displace broad climate variables in importance.</p>
       <p class="more"><a href="assets/img/cooc_workflow.jpg" data-zoom-link data-i18n="p2_more">The two-model experiment in one picture →</a></p>
       <p class="actions"><a class="btn sm" href="https://github.com/joaoczarnecki/Integrating-Phytosociological-Proxies-to-Improve-Predictions-of-Tree-Species-Local-Ecological-Perfo" data-i18n="code_data">Code & data</a></p>
@@ -91,18 +91,16 @@
   <article class="project">
     <figure><img src="assets/img/lep_importance.jpg" alt="Drop in test R² when each predictor block is permuted, by species" loading="lazy" data-zoom></figure>
     <div class="txt">
-      <p class="tag"><span class="status prep" data-i18n="st_prep">In preparation</span> <span data-i18n="p5_field">Machine learning + hurdle GAMMs</span></p>
+      <p class="tag"><span class="status prep" data-i18n="st_prelim">Preliminary results</span> <span data-i18n="p5_field">Machine learning + hurdle GAMMs</span></p>
       <h3 data-i18n="p5_title">What makes a tree species dominate its stand?</h3>
-      <p class="insight" data-i18n="p5_insight">Canopy structure from airborne lidar is what the model relies on most for <strong>5 of 7 species</strong>, and a tabular foundation model (TabPFN) predicts best: <strong>test R² 0.26–0.63</strong>.</p>
-      <p data-i18n="p5_text">Local Ecological Performance (LEP) is how well a species does where it grows: its share of the stems and basal area of the stand. For seven species on 9,526 permanent plots, I combined climate, soil, terrain, lidar structure and mapped disturbance (harvest, fire, spruce budworm, stand age). Two-part GAMMs then split what each source explains: the co-occurring species have the largest unique share (4–20%), then lidar structure (2–8%) and disturbance (0.5–2.7%), but most of the explained variation is shared, along the regional climate gradient.</p>
-      <p class="more"><a href="assets/img/lep_deviance.jpg" data-zoom-link data-i18n="p5_more1">What each factor explains, alone and shared →</a><br>
-        <a href="assets/img/lep_current_vs_expected.jpg" data-zoom-link data-i18n="p5_more2">Current vs site-expected performance, mapped →</a></p>
+      <p class="insight" data-i18n="p5_insight">Canopy structure from airborne lidar is what the model relies on most for <strong>most species</strong>, and a tabular foundation model (TabPFN) <strong>predicts better than Random Forest and a neural network</strong>.</p>
+      <p data-i18n="p5_text">Local Ecological Performance (LEP) is how well a species does where it grows: its share of the stems and basal area of the stand. For seven species across Québec's permanent plots, I combine climate, soil, terrain, lidar structure and mapped disturbance (harvest, fire, spruce budworm, stand age). Two-part GAMMs then split what each source explains: the co-occurring species carry the largest unique part, followed by lidar structure and then disturbance, but most of the explained variation is shared among them, along the regional climate gradient.</p>
     </div>
   </article>
 
   <div class="chart-card" id="lepChart">
     <div class="chart-head">
-      <h4 data-i18n="c_title">Does TabPFN beat the usual models? Test R² on spatially independent plots</h4>
+      <h4 data-i18n="c_title">Does TabPFN beat the usual models? Skill on spatially independent plots (preliminary)</h4>
       <div class="seg" role="group" aria-label="Predictor set">
         <button data-scen="abiotic" data-i18n="c_abio">Climate, soil and terrain</button><button data-scen="abiotic_lidar_ntems" class="on" data-i18n="c_full">+ lidar structure and disturbance</button>
       </div>
@@ -112,9 +110,8 @@
       <span><svg width="14" height="14" aria-hidden="true"><rect x="2" y="2" width="10" height="10" class="m-rf"/></svg>Random Forest</span>
       <span><svg width="14" height="14" aria-hidden="true"><path d="M7 1 13 13H1Z" class="m-mlp"/></svg><span data-i18n="c_mlp">Neural network (MLP)</span></span>
     </div>
-    <div class="chart-wrap"><svg id="r2svg" role="img" aria-label="Dot chart of test R-squared by species and model"></svg><div class="tip" id="r2tip" hidden></div></div>
+    <div class="chart-wrap"><svg id="r2svg" role="img" aria-label="Dot chart of the predictive skill of three models by species (no values shown)"></svg><div class="tip" id="r2tip" hidden></div></div>
     <p class="small" id="r2note"></p>
-    <p class="small"><a href="assets/img/lep_model_families.jpg" data-zoom-link data-i18n="c_fig">The full comparison, with overfitting (train minus test R²) →</a></p>
   </div>
 
   <article class="project flip">
