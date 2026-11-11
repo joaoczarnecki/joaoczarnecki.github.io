@@ -186,6 +186,10 @@ function buildSocial(){
   document.addEventListener("visibilitychange", () => { if (document.hidden) cancelAnimationFrame(raf); else if (!reduceMotion) { cancelAnimationFrame(raf); loop(); } });
 })();
 
+/* ---------- TCAMS video: no autoplay for reduced motion ---------- */
+const vid = document.getElementById("tcamsVideo");
+if (vid && reduceMotion) { vid.removeAttribute("autoplay"); vid.pause(); vid.controls = true; }
+
 /* ---------- start ---------- */
 const nav = (navigator.language || "en").slice(0,2);
 setLang(store.get("lang") || (["pt","fr"].includes(nav) ? nav : "en"));
