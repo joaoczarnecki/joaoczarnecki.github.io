@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>João Paulo Czarnecki de Liz · Forest science</title>
+<meta name="description" content="Forest ecology, species distribution modelling and lidar remote sensing in Québec's boreal–temperate ecotone. Research, code and the TCAMS app.">
+<meta property="og:title" content="João Paulo Czarnecki de Liz · Forest science">
+<meta property="og:description" content="Which forests will thrive where, as the climate changes? Models, maps, lidar and an interactive app.">
+<meta property="og:image" content="https://joaoczarnecki.github.io/assets/img/maple_maps.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2 6 16h5l-6 9h9v5h4v-5h9l-6-9h5z' fill='%232f6b3f'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="#top">JP<span>·</span>Czarnecki de Liz</a>
+  <nav class="links">
+    <a href="#research" data-i18n="nav_research">Research</a>
+    <a href="#tcams" data-i18n="nav_tcams">TCAMS app</a>
+    <a href="#pubs" data-i18n="nav_pubs">Publications</a>
+    <a href="#contact" data-i18n="nav_contact">Contact</a>
+  </nav>
+  <div class="controls">
+    <div class="lang" role="group" aria-label="Language">
+      <button data-lang="en">EN</button><button data-lang="pt">PT</button><button data-lang="fr">FR</button>
+    </div>
+    <button class="theme" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <canvas id="lidar" aria-hidden="true"></canvas>
+  <div class="hero-inner">
+    <div class="avatar">
+      <img src="assets/img/photo.jpg" alt="João Paulo Czarnecki de Liz" onerror="this.remove()">
+      <span>JP</span>
+    </div>
+    <p class="kicker" data-i18n="hero_kicker">Forest ecology · Species distribution models · Lidar</p>
+    <h1>João Paulo Czarnecki de Liz</h1>
+    <p class="lead" data-i18n="hero_lead">Which tree communities will thrive where, as Québec's climate changes? I combine forest inventory plots, airborne and spaceborne lidar and statistical models to map today's forests and their possible futures, and turn the results into tools that foresters can use.</p>
+    <p class="role" data-i18n="hero_role">Ph.D. candidate, Université Laval · Forestry engineer, M.Sc.</p>
+    <div class="cta">
+      <a class="btn primary" href="#tcams" data-i18n="hero_cta1">Try the TCAMS simulator</a>
+      <a class="btn" href="#research" data-i18n="hero_cta2">See the research</a>
+    </div>
+    <p class="hint" data-i18n="hero_hint">Above: a simulated lidar scan of a forest. Each dot is a laser return, coloured by height.</p>
+  </div>
+</section>
+
+<section class="stats" aria-label="Key numbers">
+  <div><b data-count="10000" data-plus="1">0</b><span data-i18n="stat_plots">permanent plots compared with airborne lidar</span></div>
+  <div><b data-count="5572">0</b><span data-i18n="stat_hmsc">inventory plots in the community model</span></div>
+  <div><b data-count="13">0</b><span data-i18n="stat_species">tree species modelled jointly</span></div>
+  <div><b data-count="12">0</b><span data-i18n="stat_scen">climate futures in the app (4 SSPs × 3 periods)</span></div>
+</section>
+
+<main>
+<section id="research" class="block">
+  <h2 data-i18n="research_title">Research, one question at a time</h2>
+  <p class="sub" data-i18n="research_sub">Each project comes with its data and code, so every result can be reproduced. Click a figure to enlarge it.</p>
+
+  <article class="project">
+    <figure><img src="assets/img/maple_maps.jpg" alt="Sugar maple observed presence, predicted suitability now and in the future, and habitat change" loading="lazy" data-zoom></figure>
+    <div class="txt">
+      <p class="tag"><span class="status ok" data-i18n="st_accepted">Accepted · 2026</span> <span data-i18n="p1_field">Species distribution model</span></p>
+      <h3 data-i18n="p1_title">Where can sugar maple live at its northern edge?</h3>
+      <p class="insight" data-i18n="p1_insight">Near-future habitat <strong>gains (~16%) outweigh losses (~3%)</strong>, but they depend on fine-scale terrain and soil, not climate alone.</p>
+      <p data-i18n="p1_text">A Random Forest model built on 3,664 ground plots and 20 m lidar terrain, soil and climate layers. Tested on spatially independent data: AUC 0.868, 76% accuracy. Winter cold, wind exposure, soil cation exchange and wetness drive where maple can grow.</p>
+      <p class="more"><a href="assets/img/maple_flows.jpg" data-zoom-link data-i18n="p1_more">See how pixels move between suitable and unsuitable →</a></p>
+      <p class="actions"><a class="btn sm" href="https://github.com/joaoczarnecki/Fine-Scale_Drivers_of_Sugar_Maple" data-i18n="code_data">Code & data</a></p>
+    </div>
+  </article>
+
+  <article class="project flip">
+    <figure><img src="assets/img/cooc_hexmaps.jpg" alt="Hexagon maps of observed and predicted importance value, with and without co-occurrence" loading="lazy" data-zoom></figure>
+    <div class="txt">
+      <p class="tag"><span class="status wait" data-i18n="st_review">Under review · CJFR</span> <span data-i18n="p2_field">Biotic interactions</span></p>
+      <h3 data-i18n="p2_title">Do a tree's neighbours tell us where it will do well?</h3>
+      <p class="insight" data-i18n="p2_insight">Yes: adding the species a tree grows with raised the test R² from <strong>0.01–0.44 to 0.07–0.73</strong> across seven species.</p>
+      <p data-i18n="p2_text">Climate, soil and terrain miss part of the story. Co-occurring species, read straight from the forest inventory, act as a proxy for competition and habitat filtering, reduce bias and often displace broad climate variables in importance.</p>
+      <p class="more"><a href="assets/img/cooc_workflow.jpg" data-zoom-link data-i18n="p2_more">The two-model experiment in one picture →</a></p>
+      <p class="actions"><a class="btn sm" href="https://github.com/joaoczarnecki/Integrating-Phytosociological-Proxies-to-Improve-Predictions-of-Tree-Species-Local-Ecological-Perfo" data-i18n="code_data">Code & data</a></p>
+    </div>
+  </article>
+
+  <article class="project">
+    <figure><img src="assets/img/community_study_area.jpg" alt="Study area across Québec's bioclimatic domains with the inventory plots" loading="lazy" data-zoom></figure>
+    <div class="txt">
+      <p class="tag"><span class="status prep" data-i18n="st_prep">In preparation</span> <span data-i18n="p3_field">Joint species distribution model</span></p>
+      <h3 data-i18n="p3_title">Beyond moving a single species: whole communities</h3>
+      <p class="insight" data-i18n="p3_insight">Assisted migration is usually planned one species at a time. Forests move as <strong>communities</strong>.</p>
+      <p data-i18n="p3_text">A Bayesian joint model (HMSC) of 13 species on 5,572 undisturbed plots estimates where entire potential vegetation types stay suitable under 4 emission scenarios and 3 periods, with the uncertainty carried through. Its results power the TCAMS app.</p>
+      <p class="actions"><a class="btn sm" href="https://github.com/joaoczarnecki/PEP_QC_HMSC_Analysis" data-i18n="code_pipeline">Analysis pipeline</a></p>
+    </div>
+  </article>
+
+  <article class="project flip">
+    <figure><img src="assets/img/lidar_same_ground.jpg" alt="The same forest seen by airborne lidar, GEDI and ICESat-2" loading="lazy" data-zoom></figure>
+    <div class="txt">
+      <p class="tag"><span class="status ok">DOI 10.5281/zenodo.24139153</span> <span data-i18n="p4_field">Lidar remote sensing · tutorial</span></p>
+      <h3 data-i18n="p4_title">Can satellites measure Québec's canopy height?</h3>
+      <p class="insight" data-i18n="p4_insight">On the same ground, GEDI and ICESat-2 agree with airborne lidar <strong>with almost no bias (RMSE ≈ 5 m)</strong>; most of the larger plot gap comes from harvests, time and location.</p>
+      <p data-i18n="p4_text">A step-by-step, reproducible exercise: about 10,000 permanent plots, airborne lidar and NASA's two spaceborne lidars, downloaded with SlideRule. Every step has its code, its checks and its figures, in English.</p>
+      <p class="more"><a href="assets/img/lidar_footprint_agreement.jpg" data-zoom-link data-i18n="p4_more">Footprint-by-footprint agreement →</a></p>
+      <p class="actions"><a class="btn sm primary" href="https://joaoczarnecki.github.io/ICESAT_GEDI_ALS_FRI_QUEBEC_Exercise/" data-i18n="open_tutorial">Open the tutorial</a> <a class="btn sm" href="https://github.com/joaoczarnecki/ICESAT_GEDI_ALS_FRI_QUEBEC_Exercise" data-i18n="code_data">Code & data</a></p>
+    </div>
+  </article>
+</section>
+
+<section id="tcams" class="block band">
+  <h2 data-i18n="tcams_title">TCAMS: simulate the forests of tomorrow</h2>
+  <p class="sub" data-i18n="tcams_sub">The Tree Community-Assisted Migration Simulator is a free web app. Pick a climate future and a forest community, and see where it would still find suitable ground in Québec.</p>
+  <div class="tcams-grid">
+    <figure><img src="assets/img/tcams_infographic.jpg" alt="Infographic: from inventory data to the TCAMS simulator (in French)" loading="lazy" data-zoom></figure>
+    <div>
+      <ul class="feat">
+        <li data-i18n="t_f1"><b>Community view:</b> maps of how well a whole vegetation type fits each site.</li>
+        <li data-i18n="t_f2"><b>Site view:</b> the predicted species at one plot, and “what if” communities.</li>
+        <li data-i18n="t_f3"><b>Trajectories and hexagons:</b> from today to 2100, summarised on a 20 km grid.</li>
+        <li data-i18n="t_f4"><b>Honest uncertainty:</b> credible intervals from the model's posterior draws.</li>
+      </ul>
+      <a class="btn primary" href="https://zwlwgy-jo0o0paulo0czarnecki0de0liz.shinyapps.io/TCAMS_TreeCommunity-AssistedMigration_Simulator/" data-i18n="t_launch">Launch TCAMS ↗</a>
+      <a class="btn" href="https://github.com/joaoczarnecki/Tree-Community-Assisted-Migration-Simulator_TCAMS" data-i18n="t_code">App code</a>
+      <p class="small" data-i18n="t_wake">The app may take ~30 s to wake up the first time.</p>
+    </div>
+  </div>
+
+  <div class="csi">
+    <h3 data-i18n="csi_title">Try it: how is a community scored?</h3>
+    <p data-i18n="csi_text">TCAMS turns each species' probability of occurrence into one Community Suitability Index. Move the sliders. The plain average forgives a weak species; the geometric mean does not, because a community needs all its members.</p>
+    <div class="csi-grid">
+      <div id="sliders"></div>
+      <div class="csi-out">
+        <div class="meter"><span data-i18n="csi_b">Average (bCSI)</span><div class="bar"><i id="barB"></i></div><b id="valB">–</b></div>
+        <div class="meter"><span data-i18n="csi_g">Geometric (gCSI)</span><div class="bar"><i id="barG"></i></div><b id="valG">–</b></div>
+        <p class="small" id="csiNote"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="next">
+  <h2 data-i18n="next_title">Coming next</h2>
+  <div class="cards3">
+    <div class="card"><h4 data-i18n="n1_t">Airborne lidar at permanent plots</h4><p data-i18n="n1_p">Province-wide canopy structure from Québec's lidar coverage, linked to thousands of inventory plots.</p></div>
+    <div class="card"><h4 data-i18n="n2_t">Lidar and forest disturbance</h4><p data-i18n="n2_p">How harvests, fires and insects show up in the canopy, and what they mean for models of forest change.</p></div>
+    <div class="card"><h4 data-i18n="n3_t">From climate envelopes to living landscapes</h4><p data-i18n="n3_p">A perspective on why assisted migration should be planned for ecosystems, not single species.</p></div>
+  </div>
+</section>
+
+<section class="block" id="pubs">
+  <h2 data-i18n="pubs_title">Publications and outputs</h2>
+  <ol class="pubs">
+    <li><b>Czarnecki de Liz, J.P.</b>, Thiffault, N., Coops, N.C., Morin-Bernard, A., Achim, A. (2026). Fine-scale drivers of sugar maple (<i>Acer saccharum</i>) habitat suitability at its northern range limit. <span class="status ok" data-i18n="st_accepted">Accepted · 2026</span></li>
+    <li><b>Czarnecki de Liz, J.P.</b>, Thiffault, N., D'Orangeville, L., Coops, N.C., Achim, A. Integrating phytosociological proxies to improve predictions of tree species' local ecological performance: potentials and limitations. <i>Canadian Journal of Forest Research</i>. <span class="status wait" data-i18n="st_review2">Under review</span></li>
+    <li><b>Czarnecki de Liz, J.P.</b>, Thiffault, N., Voyer, D., D'Orangeville, L., Coops, N.C., Achim, A. Beyond moving a single species: using community suitability to inform climate adaptation in the boreal–temperate ecotone. <span class="status prep" data-i18n="st_prep">In preparation</span></li>
+    <li><b>Czarnecki de Liz, J.P.</b>, Achim, A. (2026). ICESat-2 and GEDI against airborne lidar at Québec's permanent forest plots: a reproducible exercise (v1.0.0). Zenodo. <a href="https://doi.org/10.5281/zenodo.24139153">doi:10.5281/zenodo.24139153</a></li>
+    <li><b>Czarnecki de Liz, J.P.</b> TCAMS: Tree Community-Assisted Migration Simulator (Shiny app). <a href="https://github.com/joaoczarnecki/Tree-Community-Assisted-Migration-Simulator_TCAMS">GitHub</a></li>
+  </ol>
+</section>
+
+<section class="block" id="contact">
+  <h2 data-i18n="contact_title">Let's talk</h2>
+  <p class="sub" data-i18n="contact_sub">Open to collaborations on forest modelling, lidar and climate adaptation, and happy to share code and data.</p>
+  <div class="social" id="social"></div>
+</section>
+</main>
+
+<footer>
+  <p>© 2026 João Paulo Czarnecki de Liz · <span data-i18n="foot">Faculté de foresterie, de géographie et de géomatique, Université Laval, Québec</span></p>
+  <p class="small" data-i18n="foot2">Figures from the author's own studies. Text and figures CC BY 4.0.</p>
+</footer>
+
+<dialog id="lightbox"><button aria-label="Close">×</button><img alt=""></dialog>
+
+<script src="assets/i18n.js"></script>
+<script src="assets/main.js"></script>
+</body>
+</html>
